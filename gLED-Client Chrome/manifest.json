@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "gLED Client",
+    "version": "1.0.0",
+    "description": "Takes over the page of a gLED controller and replaces it with a full control UI.",
+    "content_scripts": [
+        {
+            "matches": ["http://192.168.2.42/*"],
+            "css": ["css/style.css"],
+            "js": [
+                "js/api.js",
+                "js/elements/StripView.js",
+                "js/elements/BrightnessSlider.js",
+                "js/elements/TabView.js",
+                "js/elements/AnimationPanel.js",
+                "js/elements/ManualPanel.js",
+                "js/app.js"
+            ],
+            "run_at": "document_idle",
+            "world": "MAIN"
+        }
+    ]
+}

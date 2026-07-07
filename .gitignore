@@ -1,0 +1,12 @@
+.idea/
+
+# Local firmware configuration contains WiFi credentials.
+firmware/GEdge/src/config.py
+firmware/GEdge/boot_out.txt
+firmware/GEdge/settings.toml
+firmware/GEdge/System Volume Information/
+
+*.zip
+
+__pycache__/
+*.py[cod]

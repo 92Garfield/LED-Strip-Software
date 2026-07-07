@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "gLED Client",
+    "version": "1.0.0",
+    "description": "Takes over the page of a gLED controller and replaces it with a full control UI.",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "gled-client@92garfield.gmail.com",
+            "strict_min_version": "128.0",
+            "data_collection_permissions": {
+                "required": ["none"]
+            }
+        },
+        "gecko_android": {
+            "strict_min_version": "128.0"
+        }
+    },
+    "host_permissions": ["http://192.168.2.42/*"],
+    "content_scripts": [
+        {
+            "matches": ["http://192.168.2.42/*"],
+            "css": ["css/style.css"],
+            "js": [
+                "js/api.js",
+                "js/elements/StripView.js",
+                "js/elements/BrightnessSlider.js",
+                "js/elements/TabView.js",
+                "js/elements/AnimationPanel.js",
+                "js/elements/ManualPanel.js",
+                "js/app.js"
+            ],
+            "run_at": "document_idle",
+            "world": "MAIN"
+        }
+    ]
+}

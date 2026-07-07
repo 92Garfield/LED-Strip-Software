@@ -1,0 +1,262 @@
+/* gLED Client - dark UI injected over the controller's page */
+
+body.gled {
+    margin: 0;
+    min-height: 100vh;
+    background: #0e1116;
+    color: #e6e9ee;
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* --- header ---------------------------------------------------------- */
+
+body.gled header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 20px 6px;
+}
+
+body.gled h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+body.gled .meta {
+    color: #8b94a3;
+    font-size: 0.85rem;
+}
+
+body.gled .status {
+    font-size: 0.85rem;
+    color: #8b94a3;
+    min-width: 110px;
+    text-align: right;
+}
+
+brightness-slider {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    color: #aeb6c2;
+    font-size: 0.85rem;
+}
+
+brightness-slider .icon { color: #d8a63a; }
+
+brightness-slider .value {
+    min-width: 2.8em;
+    color: #8b94a3;
+}
+
+brightness-slider input[type="range"] {
+    width: 140px;
+    accent-color: #4da3ff;
+    cursor: pointer;
+}
+
+body.gled .status.busy { color: #d8a63a; }
+body.gled .status.ok { color: #57c26b; }
+body.gled .status.error { color: #e35d5d; }
+
+/* --- physical strip view --------------------------------------------- */
+
+strip-view {
+    display: block;
+    padding: 8px 20px;
+}
+
+strip-view svg {
+    display: block;
+    width: 100%;
+    max-height: 42vh;
+    touch-action: none;
+    user-select: none;
+}
+
+strip-view .strip-line {
+    fill: none;
+    stroke: #262c36;
+    stroke-width: 1;
+    stroke-linejoin: round;
+}
+
+strip-view .led {
+    fill: #000;
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 0.3;
+    cursor: pointer;
+    transition: stroke 0.1s;
+}
+
+strip-view .led:hover {
+    stroke: #fff;
+    stroke-width: 0.5;
+}
+
+/* --- tabs -------------------------------------------------------------- */
+
+tab-view {
+    display: block;
+    margin: 10px 20px 24px;
+    background: #151a21;
+    border: 1px solid #232a35;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+tab-view .tab-bar {
+    display: flex;
+    border-bottom: 1px solid #232a35;
+}
+
+tab-view .tab-button {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #8b94a3;
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+tab-view .tab-button.active {
+    color: #e6e9ee;
+    border-bottom-color: #4da3ff;
+}
+
+tab-view .tab-body { padding: 18px; }
+tab-view .hidden { display: none; }
+
+/* --- buttons & controls ------------------------------------------------ */
+
+body.gled button {
+    background: #1e2531;
+    border: 1px solid #2c3543;
+    border-radius: 8px;
+    color: #e6e9ee;
+    font: inherit;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+}
+
+body.gled button:hover { background: #262f3e; }
+body.gled button:disabled { opacity: 0.4; cursor: default; }
+
+/* --- animation panel ---------------------------------------------------- */
+
+animation-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+animation-panel .anim-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+animation-panel .anim-button.active {
+    border-color: #4da3ff;
+    background: #1c2c42;
+    color: #9ecbff;
+}
+
+animation-panel .stop-button {
+    align-self: flex-start;
+    border-color: #4a2c30;
+    color: #e08a8a;
+}
+
+animation-panel .stop-button:hover { background: #2e2126; }
+
+/* --- manual panel -------------------------------------------------------- */
+
+manual-panel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+manual-panel .color-label,
+manual-panel .auto-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #aeb6c2;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+manual-panel input[type="color"] {
+    width: 46px;
+    height: 34px;
+    padding: 2px;
+    background: #1e2531;
+    border: 1px solid #2c3543;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+manual-panel input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: #4da3ff;
+    cursor: pointer;
+}
+
+manual-panel .send-button {
+    margin-left: auto;
+    border-color: #2b4a6b;
+    background: #1c2c42;
+    color: #9ecbff;
+}
+
+manual-panel .send-button.dirty {
+    border-color: #4da3ff;
+    box-shadow: 0 0 8px rgba(77, 163, 255, 0.35);
+}
+
+/* --- small screens ------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    body.gled header {
+        flex-wrap: wrap;
+        row-gap: 8px;
+        padding: 12px 12px 4px;
+    }
+
+    /* slider gets its own full-width row below the title */
+    brightness-slider {
+        margin-left: 0;
+        flex: 1 1 100%;
+    }
+
+    brightness-slider input[type="range"] { flex: 1; width: auto; }
+
+    body.gled .status {
+        flex: 1 1 100%;
+        min-width: 0;
+        text-align: left;
+    }
+
+    strip-view { padding: 6px 12px; }
+
+    tab-view { margin: 8px 12px 20px; }
+    tab-view .tab-body { padding: 12px; }
+
+    /* comfortable touch targets */
+    body.gled button { padding: 12px 18px; }
+
+    manual-panel { gap: 12px; }
+    manual-panel .send-button { margin-left: 0; flex: 1 1 100%; }
+}
