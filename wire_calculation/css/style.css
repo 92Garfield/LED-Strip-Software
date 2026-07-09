@@ -1,0 +1,185 @@
+:root {
+    color-scheme: dark;
+    --bg: #0f1216;
+    --bg-card: #1a1f26;
+    --bg-card-header: #212831;
+    --bg-input: #10151b;
+    --border: #2e3742;
+    --text: #e0e6ed;
+    --text-dim: #8a96a3;
+    --accent: #4fc3f7;
+    --good: #66bb6a;
+    --warn: #ffa726;
+    --bad: #ef5350;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 1500px;
+    padding: 1.5rem 1rem 3rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+}
+
+header h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.6rem;
+    color: var(--accent);
+}
+
+.subtitle {
+    margin: 0 0 1.5rem;
+    color: var(--text-dim);
+}
+
+/* ---- collapsible steps ---- */
+.step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.step summary {
+    cursor: pointer;
+    padding: 0.7rem 1rem;
+    background: var(--bg-card-header);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.step summary::-webkit-details-marker {
+    display: none;
+}
+
+.step summary::before {
+    content: "\25B8";
+    color: var(--accent);
+    margin-right: 0.6rem;
+    transition: transform 0.15s ease;
+}
+
+.step[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.step summary h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.step-num {
+    display: inline-block;
+    min-width: 1.5em;
+    color: var(--accent);
+}
+
+.step-body {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+/* ---- inputs ---- */
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.field input,
+.field select {
+    background: var(--bg-input);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.45rem 0.6rem;
+    font-size: 1rem;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: 1px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.hidden {
+    display: none;
+}
+
+/* ---- outputs ---- */
+.output table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.output th,
+.output td {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.output thead th {
+    color: var(--text-dim);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+}
+
+.output td.num,
+.output th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.output .value {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.good { color: var(--good); }
+.warn { color: var(--warn); }
+.bad  { color: var(--bad); }
+
+.row-highlight {
+    background: rgba(79, 195, 247, 0.08);
+}
+
+.note {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    margin-top: 0.7rem;
+}
+
+.error {
+    color: var(--bad);
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+footer p {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 2rem;
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Behavior Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Wire Behavior Calculator</h1>
+        <p class="subtitle">Voltage drop, power loss &amp; thermal behavior &mdash; simplified model</p>
+    </header>
+
+    <main>
+        <!-- Step 0: Input -->
+        <details class="step" open id="step-input">
+            <summary><h2><span class="step-num">1</span> Wire Input</h2></summary>
+            <div class="step-body">
+                <div class="input-grid">
+                    <label class="field">
+                        <span>Size given as</span>
+                        <select id="size-mode">
+                            <option value="awg" selected>AWG</option>
+                            <option value="diameter">Diameter (mm)</option>
+                            <option value="crossSection">Cross section (mm&sup2;)</option>
+                        </select>
+                    </label>
+
+                    <label class="field" id="awg-field">
+                        <span>AWG value</span>
+                        <select id="awg-select"></select>
+                    </label>
+
+                    <label class="field hidden" id="size-field">
+                        <span id="size-label">Diameter (mm)</span>
+                        <input type="number" id="size-input" min="0.01" step="0.01" value="1.0">
+                    </label>
+
+                    <label class="field">
+                        <span>Length (m)</span>
+                        <input type="number" id="length-input" min="0.01" step="0.1" value="5">
+                    </label>
+
+                    <label class="field">
+                        <span>Current (A)</span>
+                        <input type="number" id="current-input" min="0" step="0.1" value="3">
+                    </label>
+                </div>
+                <div id="input-summary" class="output"></div>
+            </div>
+        </details>
+
+        <!-- Step 1: Ohm's law -->
+        <details class="step" open>
+            <summary><h2><span class="step-num">2</span> Ohm's Law &mdash; Voltage &amp; Power Loss</h2></summary>
+            <div class="step-body">
+                <div id="ohms-output" class="output"></div>
+            </div>
+        </details>
+
+        <!-- Step 2: Thermal -->
+        <details class="step" open>
+            <summary><h2><span class="step-num">3</span> Thermal Behavior</h2></summary>
+            <div class="step-body">
+                <div class="input-grid">
+                    <label class="field">
+                        <span>Heatsink mass (g/m)</span>
+                        <input type="number" id="heatsink-mass" min="0" step="10" value="200">
+                    </label>
+                    <label class="field">
+                        <span>Heatsink surface (cm&sup2; per running m)</span>
+                        <input type="number" id="heatsink-surface" min="0" step="10" value="500">
+                    </label>
+                    <label class="field">
+                        <span>Heatsink material</span>
+                        <select id="heatsink-material"></select>
+                    </label>
+                    <label class="field">
+                        <span>Connection to heatsink</span>
+                        <select id="heatsink-connection"></select>
+                    </label>
+                </div>
+                <div id="thermal-output" class="output"></div>
+            </div>
+        </details>
+
+        <!-- Step 3: Household comparison -->
+        <details class="step" open>
+            <summary><h2><span class="step-num">4</span> Comparison with European Household Wires (230&nbsp;V, up to 16&nbsp;A)</h2></summary>
+            <div class="step-body">
+                <div id="comparison-output" class="output"></div>
+            </div>
+        </details>
+    </main>
+
+    <footer>
+        <p>Simplified physical model: copper conductor, PVC insulation, natural convection. Values are estimates, not a substitute for electrical code.</p>
+    </footer>
+
+    <script type="module">
+        import { App } from './js/app.js';
+        new App().init();
+    </script>
+</body>
+</html>
