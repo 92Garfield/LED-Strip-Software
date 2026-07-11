@@ -1,0 +1,10 @@
+Comment,Designator,Footprint,Quantity,LCSC Part #,Notes
+Screw terminal 5.08mm 2P (KF301-5.0-2P),J1,TB-5.08-2P,1,C474881,5V power input; mark +/- on silkscreen
+JST XH 3-pin header (B3B-XH-A),"J2,J3,J4,J5",JST-XH-3P vertical THT,4,C144394,Strip outputs: +5V / DATA / GND
+Female header 2x20 2.54mm,J6,PinSocket 2x20 P2.54mm,1,C2977589,Socket for Pi Zero 2 WH
+SN74AHCT125N,U1,DIP-14,1,C354152,"Level shifter; use SN74AHCT125DR (SOIC-14, C7470) if JLCPCB assembles"
+470R 0805,"R1,R2,R3,R4",R0805,4,C17710,Series resistor on each data line; place close to J2-J5
+1000uF 16V electrolytic,C1,CAP-TH 10x12.5mm P5.00mm,1,C43832,Bulk capacitor; place close to J1
+100nF 0805,C2,C0805,1,C49678,Decoupling at U1 VCC pin
+Fuse clip 5x20mm,"F1,F2,F3,F4",Fuse clip 5x20mm THT,8,C3130,2 clips per fuse position
+Glass fuse 5x20mm 5A,"F1,F2,F3,F4",5x20mm cartridge,4,,Not stocked for assembly; buy separately and adjust rating to your strips
