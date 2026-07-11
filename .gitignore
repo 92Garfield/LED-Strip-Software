@@ -10,3 +10,7 @@ firmware/GEdge/System Volume Information/
 
 __pycache__/
 *.py[cod]
+
+# KiCad: local history (embedded git repo) and editor lock files
+PCB/.history/
+~*.lck

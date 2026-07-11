@@ -1,0 +1,175 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-11T19:02:53",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.4",
+    "schematic_parity": [],
+    "source": "led-controller.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Abschnitt auf Edge.Cuts",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "c4a58a35-fc36-4067-a1c0-1211b2d02707"
+                },
+                {
+                    "description": "Referenzfeld von H6",
+                    "pos": {
+                        "x": 106.0,
+                        "y": -0.15
+                    },
+                    "uuid": "d8ca5aa0-9cd0-42e8-9a0c-dadd8a9d4b3b"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Abschnitt auf Edge.Cuts",
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "uuid": "c4a58a35-fc36-4067-a1c0-1211b2d02707"
+                },
+                {
+                    "description": "Referenzfeld von H5",
+                    "pos": {
+                        "x": 4.0,
+                        "y": -0.15
+                    },
+                    "uuid": "1a284897-e67e-4384-9d8e-97f310e2ddac"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Platinen-Text \"+\" auf F.Silkscreen",
+                    "pos": {
+                        "x": 96.5,
+                        "y": 11.5
+                    },
+                    "uuid": "e7e5b759-e930-4e73-92a4-53065d5ce6a2"
+                },
+                {
+                    "description": "Durchsteckpad 2 [5V_S1] von F1",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 11.5
+                    },
+                    "uuid": "8b07b004-8207-4789-bf5f-2d87160f3bb9"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Platinen-Text \"+\" auf F.Silkscreen",
+                    "pos": {
+                        "x": 96.5,
+                        "y": 53.5
+                    },
+                    "uuid": "4fc97c7b-94b1-4f19-9eb2-c1acdac58191"
+                },
+                {
+                    "description": "Durchsteckpad 2 [5V_S4] von F4",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 53.5
+                    },
+                    "uuid": "2e25eb75-f4d1-448d-8ec6-8f935dff8e7e"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Platinen-Text \"+\" auf F.Silkscreen",
+                    "pos": {
+                        "x": 96.5,
+                        "y": 25.5
+                    },
+                    "uuid": "ad502210-2bfe-4cd6-8947-bed1759ec2a9"
+                },
+                {
+                    "description": "Durchsteckpad 2 [5V_S2] von F2",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 25.5
+                    },
+                    "uuid": "acef97a6-a06f-4e9e-b772-6d5b41b37f0d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Platinen-Text \"+\" auf F.Silkscreen",
+                    "pos": {
+                        "x": 96.5,
+                        "y": 39.5
+                    },
+                    "uuid": "fea77918-2fee-4e32-b540-5838791606c2"
+                },
+                {
+                    "description": "Durchsteckpad 2 [5V_S3] von F3",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 39.5
+                    },
+                    "uuid": "85ff7ef8-011a-473a-8ba5-28ada9028a5a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        }
+    ]
+}
