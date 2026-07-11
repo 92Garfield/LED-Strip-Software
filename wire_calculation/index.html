@@ -9,13 +9,13 @@
 <body>
     <header>
         <h1>Wire Behavior Calculator</h1>
-        <p class="subtitle">Voltage drop, power loss &amp; thermal behavior &mdash; simplified model</p>
+        <p class="subtitle">Voltage drop, power loss &amp; thermal behavior for wires and PCB traces &mdash; simplified model</p>
     </header>
 
     <main>
         <!-- Step 0: Input -->
         <details class="step" open id="step-input">
-            <summary><h2><span class="step-num">1</span> Wire Input</h2></summary>
+            <summary><h2><span class="step-num">1</span> Conductor Input</h2></summary>
             <div class="step-body">
                 <div class="input-grid">
                     <label class="field">
@@ -24,6 +24,7 @@
                             <option value="awg" selected>AWG</option>
                             <option value="diameter">Diameter (mm)</option>
                             <option value="crossSection">Cross section (mm&sup2;)</option>
+                            <option value="trace">PCB trace</option>
                         </select>
                     </label>
 
@@ -35,6 +36,21 @@
                     <label class="field hidden" id="size-field">
                         <span id="size-label">Diameter (mm)</span>
                         <input type="number" id="size-input" min="0.01" step="0.01" value="1.0">
+                    </label>
+
+                    <label class="field hidden trace-field">
+                        <span>Trace width (mm)</span>
+                        <input type="number" id="trace-width" min="0.05" step="0.1" value="2.0">
+                    </label>
+
+                    <label class="field hidden trace-field">
+                        <span>Copper weight</span>
+                        <select id="copper-weight"></select>
+                    </label>
+
+                    <label class="field hidden trace-field">
+                        <span>Layer position</span>
+                        <select id="trace-layer"></select>
                     </label>
 
                     <label class="field">
@@ -59,8 +75,8 @@
             </div>
         </details>
 
-        <!-- Step 2: Thermal -->
-        <details class="step" open>
+        <!-- Step 2: Thermal (wire in air / on heatsink) -->
+        <details class="step" open id="step-wire-thermal">
             <summary><h2><span class="step-num">3</span> Thermal Behavior</h2></summary>
             <div class="step-body">
                 <div class="input-grid">
@@ -85,6 +101,14 @@
             </div>
         </details>
 
+        <!-- Step 2 (PCB mode): IPC-2221 trace heating -->
+        <details class="step hidden" open id="step-trace-thermal">
+            <summary><h2><span class="step-num">3</span> Trace Heating (IPC-2221)</h2></summary>
+            <div class="step-body">
+                <div id="trace-thermal-output" class="output"></div>
+            </div>
+        </details>
+
         <!-- Step 3: Household comparison -->
         <details class="step" open>
             <summary><h2><span class="step-num">4</span> Comparison with European Household Wires (230&nbsp;V, up to 16&nbsp;A)</h2></summary>
@@ -95,7 +119,7 @@
     </main>
 
     <footer>
-        <p>Simplified physical model: copper conductor, PVC insulation, natural convection. Values are estimates, not a substitute for electrical code.</p>
+        <p>Simplified physical model: copper conductor, PVC insulation, natural convection; PCB traces per IPC-2221 chart fit. Values are estimates, not a substitute for electrical code.</p>
     </footer>
 
     <script type="module">

@@ -1,17 +1,21 @@
 import { Wire } from './wire.js';
+import { Trace } from './trace.js';
 import { OhmsLawCalculator } from './ohms-law-calculator.js';
 import { ThermalCalculator } from './thermal-calculator.js';
 import { HeatsinkCalculator } from './heatsink-calculator.js';
+import { TraceThermalCalculator } from './trace-thermal-calculator.js';
 import { AWG_DATA } from './data/awg-data.js';
 import { THERMAL_DATA } from './data/thermal-data.js';
 import { HEATSINK_DATA } from './data/heatsink-data.js';
 import { HOUSEHOLD_WIRE_DATA } from './data/household-wire-data.js';
+import { PCB_DATA } from './data/pcb-data.js';
 
 export class App {
     constructor() {
         this.ohmsLaw = new OhmsLawCalculator();
         this.thermal = new ThermalCalculator();
         this.heatsink = new HeatsinkCalculator();
+        this.traceThermal = new TraceThermalCalculator();
         this.mainsVoltage = 230;
     }
 
@@ -23,6 +27,13 @@ export class App {
             sizeField: document.getElementById('size-field'),
             sizeLabel: document.getElementById('size-label'),
             sizeInput: document.getElementById('size-input'),
+            traceFields: document.querySelectorAll('.trace-field'),
+            traceWidth: document.getElementById('trace-width'),
+            copperWeight: document.getElementById('copper-weight'),
+            traceLayer: document.getElementById('trace-layer'),
+            stepWireThermal: document.getElementById('step-wire-thermal'),
+            stepTraceThermal: document.getElementById('step-trace-thermal'),
+            traceThermalOutput: document.getElementById('trace-thermal-output'),
             lengthInput: document.getElementById('length-input'),
             currentInput: document.getElementById('current-input'),
             heatsinkMass: document.getElementById('heatsink-mass'),
@@ -43,6 +54,20 @@ export class App {
         }
         this.el.awgSelect.value = '18';
 
+        for (const weight of PCB_DATA.copperWeights) {
+            const option = document.createElement('option');
+            option.value = weight.id;
+            option.textContent = weight.name;
+            this.el.copperWeight.appendChild(option);
+        }
+        this.el.copperWeight.value = '1oz';
+        for (const layer of PCB_DATA.ipc2221.layers) {
+            const option = document.createElement('option');
+            option.value = layer.id;
+            option.textContent = layer.name;
+            this.el.traceLayer.appendChild(option);
+        }
+
         for (const material of HEATSINK_DATA.materials) {
             const option = document.createElement('option');
             option.value = material.id;
@@ -62,6 +87,7 @@ export class App {
             this.update();
         });
         for (const input of [this.el.awgSelect, this.el.sizeInput,
+                             this.el.traceWidth, this.el.copperWeight, this.el.traceLayer,
                              this.el.lengthInput, this.el.currentInput,
                              this.el.heatsinkMass, this.el.heatsinkSurface,
                              this.el.heatsinkMaterial, this.el.heatsinkConnection]) {
@@ -75,7 +101,12 @@ export class App {
     onModeChange() {
         const mode = this.el.sizeMode.value;
         this.el.awgField.classList.toggle('hidden', mode !== 'awg');
-        this.el.sizeField.classList.toggle('hidden', mode === 'awg');
+        this.el.sizeField.classList.toggle('hidden', mode === 'awg' || mode === 'trace');
+        for (const field of this.el.traceFields) {
+            field.classList.toggle('hidden', mode !== 'trace');
+        }
+        this.el.stepWireThermal.classList.toggle('hidden', mode === 'trace');
+        this.el.stepTraceThermal.classList.toggle('hidden', mode !== 'trace');
         if (mode === 'diameter') {
             this.el.sizeLabel.textContent = 'Diameter (mm)';
         } else if (mode === 'crossSection') {
@@ -83,10 +114,17 @@ export class App {
         }
     }
 
-    buildWire() {
+    buildConductor() {
         const mode = this.el.sizeMode.value;
         if (mode === 'awg') {
             return Wire.fromAwg(this.el.awgSelect.value);
+        }
+        if (mode === 'trace') {
+            const width = parseFloat(this.el.traceWidth.value);
+            if (!(width > 0)) {
+                throw new Error('Please enter a positive trace width.');
+            }
+            return Trace.fromWidth(width, this.el.copperWeight.value);
         }
         const value = parseFloat(this.el.sizeInput.value);
         if (!(value > 0)) {
@@ -113,13 +151,14 @@ export class App {
     }
 
     update() {
-        let wire;
+        const isTrace = this.el.sizeMode.value === 'trace';
+        let conductor;
         let heatsinkConfig;
         const length = parseFloat(this.el.lengthInput.value);
         const current = parseFloat(this.el.currentInput.value);
         try {
-            wire = this.buildWire();
-            heatsinkConfig = this.buildHeatsinkConfig();
+            conductor = this.buildConductor();
+            if (!isTrace) heatsinkConfig = this.buildHeatsinkConfig();
             if (!(length > 0)) throw new Error('Please enter a positive length.');
             if (!(current >= 0)) throw new Error('Please enter a current of 0 A or more.');
         } catch (err) {
@@ -127,26 +166,37 @@ export class App {
             this.el.inputSummary.innerHTML = msg;
             this.el.ohmsOutput.innerHTML = '';
             this.el.thermalOutput.innerHTML = '';
+            this.el.traceThermalOutput.innerHTML = '';
             this.el.comparisonOutput.innerHTML = '';
             return;
         }
 
-        this.renderInputSummary(wire);
-        const ohms = this.ohmsLaw.calculate(wire, length, current);
+        this.renderInputSummary(conductor);
+        const ohms = this.ohmsLaw.calculate(conductor, length, current);
         this.renderOhms(ohms, current);
-        const thermal = this.thermal.calculate(wire, length, ohms.powerLoss);
-        const heatsink = this.heatsink.calculate(wire, length, ohms.powerLoss, heatsinkConfig);
-        this.renderThermal(thermal, heatsink);
-        this.renderComparison(wire, length, current);
+        let traceThermal = null;
+        if (isTrace) {
+            traceThermal = this.traceThermal.calculate(conductor, current, this.el.traceLayer.value);
+            this.renderTraceThermal(conductor, traceThermal, current);
+        } else {
+            const thermal = this.thermal.calculate(conductor, length, ohms.powerLoss);
+            const heatsink = this.heatsink.calculate(conductor, length, ohms.powerLoss, heatsinkConfig);
+            this.renderThermal(thermal, heatsink);
+        }
+        this.renderComparison(conductor, length, current, traceThermal);
     }
 
-    renderInputSummary(wire) {
+    renderInputSummary(conductor) {
+        const sizeRows = conductor instanceof Trace
+            ? `<tr><td>Trace width</td><td class="num value">${this.fmt(conductor.width, 2)} mm</td></tr>
+               <tr><td>Copper thickness (${conductor.copperWeight.name.split(' (')[0]})</td><td class="num value">${this.fmt(conductor.thickness * 1000, 1)} µm</td></tr>`
+            : `<tr><td>Conductor diameter</td><td class="num value">${this.fmt(conductor.diameter, 3)} mm</td></tr>`;
         this.el.inputSummary.innerHTML = `
             <table>
-                <tr><td>Selected wire</td><td class="num value">${wire.label}</td></tr>
-                <tr><td>Conductor diameter</td><td class="num value">${this.fmt(wire.diameter, 3)} mm</td></tr>
-                <tr><td>Cross section</td><td class="num value">${this.fmt(wire.crossSection, 3)} mm²</td></tr>
-                <tr><td>Resistance per meter (copper, 20 °C)</td><td class="num value">${this.fmt(wire.resistancePerMeter * 1000, 2)} mΩ/m</td></tr>
+                <tr><td>Selected conductor</td><td class="num value">${conductor.label}</td></tr>
+                ${sizeRows}
+                <tr><td>Cross section</td><td class="num value">${this.fmt(conductor.crossSection, 3)} mm²</td></tr>
+                <tr><td>Resistance per meter (copper, 20 °C)</td><td class="num value">${this.fmt(conductor.resistancePerMeter * 1000, 2)} mΩ/m</td></tr>
             </table>`;
     }
 
@@ -221,9 +271,68 @@ export class App {
             final rise per time constant).</p>`;
     }
 
-    renderComparison(userWire, length, current) {
+    renderTraceThermal(trace, result, current) {
+        const { ipc2221 } = PCB_DATA;
+        const ambientRows = result.perAmbient.map((r) => `
+            <tr>
+                <td>${r.ambient} °C</td>
+                <td class="num">${this.fmt(result.tempRise, 1)} K</td>
+                <td class="num">${this.fmt(r.traceTemp, 1)} °C</td>
+            </tr>`).join('');
+        const riseRows = result.perRise.map((r) => {
+            const ok = current <= r.maxCurrent;
+            const status = ok
+                ? '<span class="good">OK — trace is wide enough</span>'
+                : '<span class="bad">Too narrow for this current</span>';
+            return `
+                <tr>
+                    <td>${r.rise} K</td>
+                    <td class="num">${this.fmt(r.maxCurrent, 2)} A</td>
+                    <td class="num">${this.fmt(r.requiredWidth, 2)} mm</td>
+                    <td>${status}</td>
+                </tr>`;
+        }).join('');
+        const chartWarning = result.withinChart ? '' : `
+            <p class="error">Outside the IPC-2221 chart range (≤ ${ipc2221.maxCurrent} A,
+            ≤ ${ipc2221.maxTempRise} K rise) — treat these numbers as rough extrapolation.</p>`;
+
+        this.el.traceThermalOutput.innerHTML = `
+            <table>
+                <tr><td>Layer model</td><td class="num value">${result.layer.name}</td></tr>
+                <tr><td>Temperature rise at ${this.fmt(current, 1)} A</td><td class="num value">${this.fmt(result.tempRise, 1)} K</td></tr>
+            </table>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Room temp.</th><th class="num">Temp. rise</th><th class="num">Trace temp.</th></tr>
+                    </thead>
+                    <tbody>${ambientRows}</tbody>
+                </table>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Allowed rise</th>
+                            <th class="num">Max current (this trace)</th>
+                            <th class="num">Required width @ ${this.fmt(current, 1)} A</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>${riseRows}</tbody>
+                </table>
+            </div>
+            ${chartWarning}
+            <p class="note">IPC-2221 chart fit (I = k·ΔT<sup>0.44</sup>·A<sup>0.725</sup>): a single trace
+            in still air, no neighboring heat sources. Internal layers take half the current of external
+            ones. A 10 K rise is conservative, 20–30 K is a common design choice. For high-current LED
+            power rails, prefer wide polygon pours over minimum-width traces — the formula's assumptions
+            get conservative for very wide geometries.</p>`;
+    }
+
+    renderComparison(userWire, length, current, traceThermal = null) {
         const wires = [
-            { name: `Your wire — ${userWire.label}`, wire: userWire, maxCurrent: null, highlight: true },
+            { name: `Your ${traceThermal ? 'trace' : 'wire'} — ${userWire.label}`, wire: userWire, maxCurrent: null, highlight: true },
             ...HOUSEHOLD_WIRE_DATA.map((d) => ({
                 name: d.name,
                 wire: Wire.fromCrossSection(d.crossSection),
@@ -234,8 +343,14 @@ export class App {
 
         const rows = wires.map((entry) => {
             const ohms = this.ohmsLaw.calculate(entry.wire, length, current);
-            const thermal = this.thermal.calculate(entry.wire, length, ohms.powerLoss);
-            const room25 = thermal.perAmbient[0];
+            let equilibriumTemp;
+            if (entry.highlight && traceThermal) {
+                // IPC trace model instead of the round-wire-in-air model
+                equilibriumTemp = traceThermal.perAmbient[0].traceTemp;
+            } else {
+                const thermal = this.thermal.calculate(entry.wire, length, ohms.powerLoss);
+                equilibriumTemp = thermal.perAmbient[0].equilibriumTemp;
+            }
             const dropPercent = (ohms.voltageDrop / this.mainsVoltage) * 100;
             let rating = '—';
             if (entry.maxCurrent !== null) {
@@ -250,7 +365,7 @@ export class App {
                     <td class="num">${this.fmt(ohms.voltageDrop, 3)}</td>
                     <td class="num">${this.fmt(dropPercent, 2)} %</td>
                     <td class="num">${this.fmt(ohms.powerLoss, 2)}</td>
-                    <td class="num">${this.fmt(room25.equilibriumTemp, 1)}</td>
+                    <td class="num">${this.fmt(equilibriumTemp, 1)}</td>
                     <td>${rating}</td>
                 </tr>`;
         }).join('');
@@ -274,7 +389,9 @@ export class App {
             </div>
             <p class="note">All wires evaluated with your length (${this.fmt(length, 1)} m) and current
             (${this.fmt(current, 1)} A). European household circuits run at 230 V with breakers up to 16 A;
-            ratings are typical continuous limits for fixed installation.</p>`;
+            ratings are typical continuous limits for fixed installation.${traceThermal
+                ? ' Your trace row uses the IPC-2221 trace model for its temperature; the household rows use the wire-in-air model.'
+                : ''}</p>`;
     }
 
     fmt(value, digits = 2) {
