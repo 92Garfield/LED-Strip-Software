@@ -67,6 +67,7 @@ open. The silkscreen marks the polarity at each connector.
 - `drc.json` — DRC report: **0 errors, 0 warnings, 0 unconnected items**.
 - `render_top.png` / `render_bottom.png` — 3D renders.
 - `bom.csv` — the three connector types (plus standoffs); 8× JST XH total.
+- `case/v1/` — 3D-printable case (OpenSCAD source + STLs), see its README.
 
 ## Regenerating
 
