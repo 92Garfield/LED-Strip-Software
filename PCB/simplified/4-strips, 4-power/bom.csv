@@ -2,4 +2,3 @@ Comment,Designator,Footprint,Quantity,LCSC Part #,Notes
 Screw terminal 5.08mm 2P (KF301-5.0-2P),J1,TB-5.08-2P,1,C474881,5V power input; mark +/- on silkscreen
 JST XH 3-pin header (B3B-XH-A),"J2,J3,J4,J5,J7,J8,J9,J10",JST-XH-3P vertical THT,8,C144394,"J2-J5: strip outputs +5V / DATA / GND; J7-J10: power only (+5V / GND, data pin unconnected)"
 Female header 2x20 2.54mm,J6,PinSocket 2x20 P2.54mm,1,C2977589,Socket for Pi Zero 2 WH; solder on the BACK side
-M2.5 standoff + screws,"H1-H4",,4,,Not on the PCB; mounts the Pi under the board

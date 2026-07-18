@@ -59,6 +59,16 @@ brightness-slider input[type="range"] {
     cursor: pointer;
 }
 
+body.gled .power-button {
+    padding: 6px 12px;
+    border-color: #4a2c30;
+    color: #e08a8a;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+body.gled .power-button:hover { background: #2e2126; }
+
 body.gled .status.busy { color: #d8a63a; }
 body.gled .status.ok { color: #57c26b; }
 body.gled .status.error { color: #e35d5d; }

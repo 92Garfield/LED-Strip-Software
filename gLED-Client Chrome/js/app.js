@@ -58,6 +58,17 @@
     const brightness = document.createElement("brightness-slider").setup(state.brightness);
     header.append(title, meta, brightness, status);
 
+    // Controllers running a full OS (GEdge Zero) advertise a shutdown
+    // capability; give those a power button so they can be unplugged safely.
+    let power = null;
+    if (gled.shutdown) {
+        power = document.createElement("button");
+        power.classList.add("power-button");
+        power.title = "Shut down controller";
+        power.textContent = "⏻";
+        header.append(power);
+    }
+
     const strip = document.createElement("strip-view").setup(gled);
     strip.setColors(state.colors);
 
@@ -157,4 +168,15 @@
         animations.setActive(null);
         report(client.stopAnimation(), "Animation stopped");
     });
+
+    if (power) {
+        power.addEventListener("click", () => {
+            if (!confirm("Shut down the controller? It will need a power-cycle to come back on.")) return;
+            power.disabled = true;
+            report(client.shutdown(), "Powering off").then(() => {
+                // Only a failed request leaves anything to retry.
+                if (status.classList.contains("error")) power.disabled = false;
+            });
+        });
+    }
 })();

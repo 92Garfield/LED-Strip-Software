@@ -39,4 +39,10 @@ class LEDClient {
     stopAnimation() {
         return this._post("animation", "stop");
     }
+
+    // Powers off the controller's OS (GEdge Zero only, advertised via
+    // gLED.shutdown). The board needs a power-cycle to come back.
+    shutdown() {
+        return this._post("shutdown", "now");
+    }
 }

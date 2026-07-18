@@ -6,6 +6,9 @@ firmware/GEdge/boot_out.txt
 firmware/GEdge/settings.toml
 firmware/GEdge/System Volume Information/
 
+# Local firmware configuration is host-specific (GPIO/DMA/network setup).
+firmware/GEdge Zero/src/config.py
+
 *.zip
 PCB/pcbway_refer.txt
 
